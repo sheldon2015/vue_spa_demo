@@ -1,7 +1,5 @@
 <style>
 
-
-
 .item .bid-info-wrap {
     display: flex;
 }

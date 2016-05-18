@@ -6,7 +6,12 @@
 
 <template>
 
-<div id="invest-list">
+<div v-if='$loadingRouteData'>
+
+
+    Loading ...</div>
+
+<div id="invest-list" v-if='!$loadingRouteData'>
     <ul class='list-unstyled'>
         <list-item v-for="item in list" v-bind:list-item='item'></list-item>
     </ul>
@@ -17,113 +22,144 @@
 <script>
 
 import ListItem from '../components/ListItem.vue'
-
 export default {
     components: {
         ListItem
     },
     data() {
+        console.log('investlist data1');
         return {
-            list: '',
-
+            list: ''
         }
     },
     ready: function() {
-        console.log('ready');
-        let me = this;
-        me.timerIds = [];
-        me.$http({
-                url: 'src/store/investlist.json',
-                method: 'GET'
-            })
-            .then(function(success) {
-                me.list = success.data;
-                me.list.forEach(function(element) {
+        console.log('investlist ready');
+        // let me = this;
+        // me.timerIds = [];
+        // me.$http({
+        //         url: 'src/store/investlist.json',
+        //         method: 'GET'
+        //     })
+        //     .then(function(success) {
+        //         me.list = success.data;
+        //         me.list.forEach(function(element) {
 
-                    if (/^\d*$/.test(element.progress)) {
+        //             if (/^\d*$/.test(element.progress)) {
 
-                        let timerId = setInterval(function() {
-                            element.progress = parseInt(element.progress) - 1;
+        //                 let timerId = setInterval(function() {
+        //                     element.progress = parseInt(element.progress) - 1;
 
-                            // console.log(element.progress);
+        //                     // console.log(element.progress);
 
-                            /**
-                             *不需要手动调用nextTick 方法，数据与视图之间是响应的
-                             */
+        //                     /**
+        //                      *不需要手动调用nextTick 方法，数据与视图之间是响应的
+        //                      */
 
-                            // me.$nextTick(function() {
-                            //     console.log(element.progress);
-                            // });
+        //                     // me.$nextTick(function() {
+        //                     //     console.log(element.progress);
+        //                     // });
 
-                            if (element.progress == 0) {
+        //                     if (element.progress == 0) {
 
-                                clearInterval(timerId);
+        //                         clearInterval(timerId);
 
-                            }
+        //                     }
 
-                        }, 1000);
-                        me.timerIds.push(timerId);
+        //                 }, 1000);
+        //                 me.timerIds.push(timerId);
 
-                    }
-                });
-            }, function(error) {
-                console.log(error);
-            });
+        //             }
+        //         });
+        //     }, function(error) {
+        //         console.log(error);
+        //     });
+        //
+
+
+
+
     },
     attached: function() {
-        console.log('attached');
+        console.log('investlist attached');
     },
 
     beforeDestroy: function() {
-
         // this.timerIds.forEach(function(timerId) {
         //     clearInterval(timerId);
         //
         //
         // })
 
-
         for (let timerId of this.timerIds) {
             clearInterval(timerId);
-
         }
-
-
-        console.log('beforeDestroy');
+        console.log('investlist beforeDestroy');
     },
     destroyed: function() {
-        console.log('destroyed');
+        console.log('investlist destroyed');
     },
     route: {
         activate: function(transition) {
-          transition.next()
-            console.log('hook-example activated!')
+            console.log('investlist activated!');
+            transition.next();
 
         },
         deactivate: function(transition) {
-          transition.next()
-            console.log('hook-example deactivated!')
-
+            console.log('investlist deactivated!');
+            transition.next();
         },
         canActivate: function(transition) {
-          transition.next()
-            console.log('hook-example canActivate!')
-
+            console.log('investlist canActivate!');
+            transition.next();
         },
         canDeactivate: function(transition) {
-          transition.next()
-            console.log('hook-example canDeactivate!')
-
-        },
-        canReuse: function(transition) {
-          transition.next()
-            console.log('hook-example canReuse!')
+            console.log('investlist canDeactivate!');
+            transition.next();
         },
         data: function(transition) {
-          transition.next()
-            console.log('hook-example data!')
+            console.log('investlist data2!');
 
-        }
+
+            /**
+             * 返回一个promise
+             */
+            let me = this;
+            me.timerIds = [];
+
+            return this.$http({
+                url: 'src/store/investlist.json',
+                method: 'GET'
+            }).then(function(success) {
+
+                setTimeout(function() {
+
+                    me.list.forEach(function(element) {
+                        if (/^\d*$/.test(element.progress)) {
+                            let timerId = setInterval(function() {
+                                element.progress = parseInt(element.progress) - 1;
+                                if (element.progress == 0) {
+                                    clearInterval(timerId);
+                                }
+                            }, 1000);
+                            me.timerIds.push(timerId);
+
+                        }
+                    });
+                })
+
+                return {
+                    list: success.data
+                };
+            }, function(error) {
+                console.log(error);
+            });
+        },
+        canReuse: function(transition) {
+            console.log('investlist canReuse!')
+            transition.next()
+        },
+
+
     }
 }
 

@@ -35,7 +35,7 @@
 import Side from './Side.vue'
 import Main from './Main.vue'
 import Head_v from './Head_v.vue'
-// import Foot_v from './Foot_v.vue'·
+    // import Foot_v from './Foot_v.vue'·
 import Mask from './Mask.vue'
 
 export default {

@@ -60,7 +60,7 @@ let links = [{
 }];
 export default {
 
-    data() {
+        data() {
             return {
                 links
             }

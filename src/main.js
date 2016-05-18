@@ -6,21 +6,15 @@ import BidDetail from './views/BidDetail.vue'
 import Resource from 'vue-resource'
 import countback from './filter/countback'
 
-
-Vue.config.debug = true;
-
+Vue.config.debug = true
 
 // 挂载路由
-Vue.use(Router);
+Vue.use(Router)
 
+Vue.use(Resource)
 
-Vue.use(Resource);
-
-
-//注册自定义的过滤器
-Vue.filter('countback', countback);
-
-
+// 注册自定义的过滤器
+Vue.filter('countback', countback)
 
 // 路由器需要一个根组件。
 // 出于演示的目的，这里使用一个空的组件，直接使用 HTML 作为应用的模板
@@ -31,8 +25,6 @@ var WebApp = Vue.extend()
 var router = new Router({
     linkActiveClass: 'v-link-active'
 
-
-
 })
 
 /**
@@ -41,18 +33,12 @@ var router = new Router({
 router.beforeEach((transition) => {
 
     if (transition.to.name === 'account' && !transition.to.logined) {
-        //  transition.abort();
-        router.go({ name: 'login' });
-
-
+        //  transition.abort()
+        // router.go({ name: 'login' });  还可以利用transition对象进行重定向
+        transition.redirect('/login')
     } else {
-
-        transition.next();
-
+        transition.next()
     }
-
-
-
 })
 
 // 定义路由规则
@@ -62,7 +48,7 @@ router.beforeEach((transition) => {
 router.map({
     '/': {
         component: App,
-        logined: true,//嵌套路由，同名属性（logined）会被覆盖
+        logined: true, // 嵌套路由，同名属性（logined）会被覆盖
         subRoutes: {
             '/': {
                 name: 'default',
@@ -96,7 +82,52 @@ router.map({
             '/login': {
                 name: 'login',
                 component: {
-                    template: '<p>Default sub view for login</p>'
+                    template: '<p>Default sub view for login</p>',
+                    data() {
+                        console.log('login data1')
+                        return {
+                            list: ''
+                        }
+                    },
+                    ready: function() {
+                        console.log('login ready')
+                    },
+                    attached: function() {
+                        console.log('login attached')
+                    },
+
+                    beforeDestroy: function() {
+                        console.log('login beforeDestroy')
+                    },
+                    destroyed: function() {
+                        console.log('login destroyed')
+                    },
+                    route: {
+                        activate: function(transition) {
+                            console.log('login activated!')
+                            transition.next()
+                        },
+                        deactivate: function(transition) {
+                            console.log('login deactivated!')
+                            transition.next()
+                        },
+                        canActivate: function(transition) {
+                            console.log('login canActivate!')
+                            transition.next()
+                        },
+                        canDeactivate: function(transition) {
+                            console.log('login canDeactivate!')
+                            transition.next()
+                        },
+                        canReuse: function(transition) {
+                            console.log('login canReuse!')
+                            transition.next()
+                        },
+                        data: function(transition) {
+                            console.log('login data2!')
+                            transition.next()
+                        }
+                    }
                 }
             },
             '/regist': {
@@ -108,7 +139,6 @@ router.map({
             '/bidDetail/:bidId': {
                 name: 'bidDetail',
                 component: BidDetail
-
 
             },
             '/bidForm': {
