@@ -31,3 +31,4 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 2. 全匹配片段
 3. 路由切换
 --------------------------------------------------------------------------------
+test
